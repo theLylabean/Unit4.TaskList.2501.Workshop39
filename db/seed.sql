@@ -1,17 +1,3 @@
--- // import db from "#db/client";
-
--- // import { createTask } from "#db/queries/tasks";
--- // import { createUser } from "#db/queries/users";
-
--- // await db.connect();
--- // await seed();
--- // await db.end();
--- // console.log("🌱 Database seeded.");
-
--- // async function seed() {
--- //   // TODO
--- // }
-
 DELETE FROM users;
 DELETE FROM tasks;
 
@@ -44,3 +30,5 @@ INSERT INTO tasks (title, done, user_id) VALUES
         false,
         (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
     );
+
+console.log("🌱 Database seeded.");
