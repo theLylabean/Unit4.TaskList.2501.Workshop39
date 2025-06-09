@@ -1,5 +1,4 @@
 import db from '../client.js';
-import app from '#server';
 
 export async function createUsers({ name, username, pw }){
     const sql = `
