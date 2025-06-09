@@ -1,8 +1,8 @@
 DELETE FROM users;
 DELETE FROM tasks;
 
-INSERT INTO users (username, password) VALUES
-    ('dawnie88@gmail.com', '421aters');
+INSERT INTO users (name, username, password) VALUES
+    ('Lyla Lynn', 'dawnie88@gmail.com', '421aters');
 
 INSERT INTO tasks (title, done, user_id) VALUES
     (
@@ -30,5 +30,3 @@ INSERT INTO tasks (title, done, user_id) VALUES
         false,
         (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
     );
-
-console.log("🌱 Database seeded.");
