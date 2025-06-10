@@ -35,25 +35,4 @@ router.post('/login', async( req, res, next ) => {
   }
 })
 
-router.get('/', async( req, res, next ) => {
-    const users = await getUsers();
-    res.send(users);
-})
-
-router.get('/:id', async( req, res, next ) => {
-    const id = req.params.id;
-    try {
-        if(!Number.isInteger(id) && id < 0){
-            return res.status(400).send({ error: 'Please send a valid number.' })
-        }
-        const user = getUserById(id);
-        if(!user){
-            return res.status(404).send({ error: 'User ID not found.' })
-        }
-        res.send(user);
-    } catch (err) {
-        console.log(err)
-    }
-})
-
 

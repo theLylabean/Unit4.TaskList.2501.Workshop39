@@ -34,7 +34,7 @@ export async function updateTask({ id, title, done, user_id }){
     const sql = `
         UPDATE tasks
         SET title = $1, done = $2
-        WHERE id = $3 && user_id = $4
+        WHERE id = $3 AND user_id = $4
         RETURNING *;
     `;
     const { rows: task } = await db.query(sql, [title, done, id, user_id])
