@@ -1,8 +1,14 @@
+import db from "./client.js";
+import bcrypt from 'bcrypt';
+
+async function seedFile(){
+    await db.connect();
+const sql = `
 DELETE FROM users;
 DELETE FROM tasks;
 
 INSERT INTO users (name, username, password) VALUES
-    ('Lyla Lynn', 'dawnie88@gmail.com', '421aters');
+    ('Lyla Lynn', 'dawnie88@gmail.com', '${await bcrypt.hash('421aters', 5)}');
 
 INSERT INTO tasks (title, done, user_id) VALUES
     (
@@ -30,3 +36,8 @@ INSERT INTO tasks (title, done, user_id) VALUES
         false,
         (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
     );
+`
+await db.query(sql);
+await db.end();
+}
+seedFile();

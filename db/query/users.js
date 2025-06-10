@@ -1,13 +1,12 @@
 import db from '../client.js';
 
-export async function createUsers({ name, username, pw }){
-    const sql = `
-        INSERT INTO users (name, username, pw)
+export async function createUsers( name, username, hashedPassword ){
+    const sql = await db.query(`
+        INSERT INTO users (name, username, password)
         VALUES ($1, $2, $3)
         RETURNING *;
-    `;
-    const { rows: users } = await db.query(sql, [name, username, pw]);
-    return users;
+    `, [name, username, hashedPassword]);
+    return sql.rows[0];
 }
 
 export async function getUsers(){
@@ -26,14 +25,14 @@ export async function getUserById(id){
     return user[0];
 }
 
-export async function updateUser({ id, name, username, pw }){
+export async function updateUser({ id, name, username, password }){
     const sql = `
         UPDATE users
-        SET name = $1, username = $2, pw = $3
+        SET name = $1, username = $2, password = $3
         WHERE id = $4
         RETURNING *;
     `;
-    const { rows: user } = await db.query(sql, [name, username, pw, id ])
+    const { rows: user } = await db.query(sql, [name, username, password, id ])
     return user[0];
 }
 
