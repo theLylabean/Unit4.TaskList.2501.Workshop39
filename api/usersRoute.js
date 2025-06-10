@@ -1,5 +1,4 @@
-import { createUsers, getUsers } from '#db/query/users';
-import verifyToken from '#auth/auth';
+import { createUsers, getUserById, getUsers } from '#db/query/users';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import db from '#db/client';
@@ -41,14 +40,20 @@ router.get('/', async( req, res, next ) => {
     res.send(users);
 })
 
-router.get('/completedTasks', verifyToken, async( req, res, next ) => {
-  try{
-      const result = await db.query(`SELECT * FROM tasks WHERE done = true;`)
-    const finishedTasks = await result.rows[0]; 
-    if(!finishedTasks) return res.status(404).send('Error finding tasks.');
-    res.status(201).send(finishedTasks);
-  }catch(err){
-    console.log(err);
-    res.send('Error getting completed tasks.');
-  }
+router.get('/:id', async( req, res, next ) => {
+    const id = req.params.id;
+    try {
+        if(!Number.isInteger(id) && id < 0){
+            return res.status(400).send({ error: 'Please send a valid number.' })
+        }
+        const user = getUserById(id);
+        if(!user){
+            return res.status(404).send({ error: 'User ID not found.' })
+        }
+        res.send(user);
+    } catch (err) {
+        console.log(err)
+    }
 })
+
+

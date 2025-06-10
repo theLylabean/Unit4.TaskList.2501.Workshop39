@@ -1,8 +1,8 @@
-import db from '../client.js';
+import db from "#db/client";
 
-export async function createTasks({ title, done, user_name }){
+export async function createTasks({ title, done, user_username }){
     const result = await db.query(
-        `SELECT id FROM users WHERE name =$1;`, [user_name]
+        `SELECT id FROM users WHERE name =$1;`, [user_username]
     );
     const user_id = result.rows[0].id;
     const sql = `
