@@ -14,27 +14,27 @@ INSERT INTO tasks (title, done, user_id) VALUES
     (
         'Laundry',
         false,
-        (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
+        (SELECT id FROM users WHERE name = 'Lyla Lynn')
     ),
     (
         'Dishes',
         false,
-        (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
+        (SELECT id FROM users WHERE name = 'Lyla Lynn')
     ),
     (
         'Vacuum',
         true,
-        (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
+        (SELECT id FROM users WHERE name = 'Lyla Lynn')
     ),
     (
         'Do Coding Homework',
         false,
-        (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
+        (SELECT id FROM users WHERE name = 'Lyla Lynn')
     ),
     (
         'Send Nancy tiny glitter penises',
         false,
-        (SELECT id FROM users WHERE username = 'dawnie88@gmail.com')
+        (SELECT id FROM users WHERE name = 'Lyla Lynn')
     );
 `
 await db.query(sql);

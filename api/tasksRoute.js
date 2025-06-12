@@ -1,8 +1,7 @@
-import { getTaskById, getTasks, updateTask, deleteTask } from '#db/query/tasks';
+import { getTaskById, getTasks, updateTask, deleteTask, createTasks } from '#db/query/tasks';
 import verifyToken from '#auth/auth';
 import db from '#db/client';
 import express from 'express';
-import { deleteTask } from '#db/query/users';
 const router = express.Router();
 
 router.get('/', verifyToken, async( req, res, next ) => {
@@ -10,13 +9,34 @@ router.get('/', verifyToken, async( req, res, next ) => {
     res.send(tasks);
 })
 
+router.post('/', verifyToken, async( req, res, next ) => {
+    const { title, done, user_name } = req.body;
+    try {
+        if(!req.body){
+            return res.status(400).send({ error: 'Missing req.body' });
+        }
+         console.log(title)
+        console.log(done)
+        console.log(user_name)
+        if(!title || typeof done !== 'boolean' || !user_name){
+            return res.status(400).send({ error: 'Missing one or more required fields.' });
+        }
+        const task = await createTasks({ title, done, user_name });
+       
+        res.status(201).send(task);
+    } catch (error) {
+        console.log(err);
+        res.status(500).send({ error: 'Server error.' });
+    }
+})
+
 router.get('/:id', verifyToken, async( req, res, next ) => {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     try {
         if(!Number.isInteger(id) && id < 0){
             return res.status(400).send({ error: 'Please send a valid number.' });
         }
-        const task = getTaskById(id);
+        const task = await getTaskById(id);
         if(!task){
             return res.status(404).send({ error: 'User ID not found.' });
         }

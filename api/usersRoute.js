@@ -1,10 +1,15 @@
-import { createUsers, getUserById, getUsers } from '#db/query/users';
+import { createUsers, getUsers } from '#db/query/users';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import db from '#db/client';
 import express from 'express';
 const router = express.Router();
 export default router
+
+router.get('/', async( req, res, next ) => {
+    const users = await getUsers();
+    res.send(users);
+})
 
 router.post('/register', async( req, res, next ) => {
     const { name, username, password } = req.body;
@@ -13,7 +18,7 @@ router.post('/register', async( req, res, next ) => {
         const newUser = await createUsers(name, username, hashedPassword)
     
           if(!newUser) return res.status(401).send('Error creating new user.');
-          const token = jwt.sign({ id: newUser.id, username: newUser.email }, process.env.JWT_SECRET);
+          const token = jwt.sign({ id: newUser.id, username: newUser.username }, process.env.JWT_SECRET);
           res.status(201).send(token);
       }catch(err){
         console.log('Error registering', err);
@@ -27,7 +32,10 @@ router.post('/login', async( req, res, next ) => {
     const result = await db.query(`SELECT * FROM users WHERE username = $1;`, [username]);
     const userInfo = await result.rows[0];
     const isPWMatch = await bcrypt.compare(password, userInfo.password);
-    if(!isPWMatch) return res.status(401).send('Not authorized.');
+    console.log(isPWMatch);
+    if(!isPWMatch){
+      return res.status(401).send('Not authorised.');
+    }
     const token = jwt.sign({ id: userInfo.id, username: userInfo.username }, process.env.JWT_SECRET);
     res.status(201).send(token);
   }catch(err){

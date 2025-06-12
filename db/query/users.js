@@ -36,7 +36,7 @@ export async function updateUser({ id, name, username, password }){
     return user[0];
 }
 
-export async function deleteTask(id){
+export async function deleteUser(id){
     const sql = `
         DELETE FROM users WHERE id = $1
         RETURNING *;
