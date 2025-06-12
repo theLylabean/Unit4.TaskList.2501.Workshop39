@@ -26,10 +26,14 @@ export async function getTasks(){
 }
 
 export async function getTaskById(id){
+    const taskId = Number(id);
+    if (isNaN(taskId)) {
+    throw new Error('Invalid task ID');
+    }
     const sql = `
         SELECT * FROM tasks WHERE id = $1
     `;
-    const { rows: tasks } = await db.query(sql, [id]);
+    const { rows: tasks } = await db.query(sql, [taskId]);
     return tasks[0];
 }
 

@@ -30,6 +30,18 @@ router.post('/', verifyToken, async( req, res, next ) => {
     }
 })
 
+router.get('/completedTasks', verifyToken, async( req, res, next ) => {
+  try{
+    const result = await db.query(`SELECT * FROM tasks WHERE done = true;`)
+    const finishedTasks = result.rows; 
+    if(!finishedTasks.length) return res.status(404).send('Error finding tasks.');
+    res.status(200).send(finishedTasks);
+  }catch(err){
+    console.log(err);
+    res.status(500).send('Error getting completed tasks.');
+  }
+})
+
 router.get('/:id', verifyToken, async( req, res, next ) => {
     const id = parseInt(req.params.id);
     try {
@@ -50,7 +62,7 @@ router.get('/:id', verifyToken, async( req, res, next ) => {
 router.put('/:id', verifyToken, async( req, res, next ) => {
     const id = parseInt(req.params.id);
     const { title, done } = req.body;
-    const user_id = req.user?.id;
+    const user_id = Number(req.user?.id);
     try {
         if(!req.body){
             return res.status(400).send({ error: 'Please send all required information.' });
@@ -75,7 +87,7 @@ router.put('/:id', verifyToken, async( req, res, next ) => {
 
 router.delete('/:id', verifyToken, async( req, res, next ) => {
     const id = parseInt(req.params.id);
-    const user_id = req.user?.id;
+    const user_id = Number(req.user?.id);
     try {
         if(!Number.isInteger(id) && id < 0){
             return res.status(400).send({ error: 'Not a valid number.' });
@@ -98,17 +110,7 @@ router.delete('/:id', verifyToken, async( req, res, next ) => {
     }
 })
 
-router.get('/completedTasks', verifyToken, async( req, res, next ) => {
-  try{
-      const result = await db.query(`SELECT * FROM tasks WHERE done = true;`)
-    const finishedTasks = await result.rows[0]; 
-    if(!finishedTasks) return res.status(404).send('Error finding tasks.');
-    res.status(201).send(finishedTasks);
-  }catch(err){
-    console.log(err);
-    res.send('Error getting completed tasks.');
-  }
-})
+
 
 
 export default router

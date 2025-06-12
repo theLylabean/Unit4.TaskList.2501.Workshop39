@@ -32,7 +32,6 @@ router.post('/login', async( req, res, next ) => {
     const result = await db.query(`SELECT * FROM users WHERE username = $1;`, [username]);
     const userInfo = await result.rows[0];
     const isPWMatch = await bcrypt.compare(password, userInfo.password);
-    console.log(isPWMatch);
     if(!isPWMatch){
       return res.status(401).send('Not authorised.');
     }
